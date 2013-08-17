@@ -2,7 +2,7 @@
 
 
 //Manejo de la camara
-GLdouble thethacamara=0;
+GLdouble thethacamara=30;
 GLdouble thRcamara=0;
 GLdouble zoom=0.2;
 
@@ -13,7 +13,8 @@ float d2r = 3.14159265 / 180.0;
 void camara(){
 	thRcamara=thethacamara*d2r;
 	//gluLookAt(0.1,-0.1,0.1,0,0,0,0,0.5,0);
-	gluLookAt(0.2+zoom*sin(thRcamara),-0.2,(0.1-zoom*cos(thRcamara)),0.0,0.0,0.5,0,1,0);
+	//gluLookAt(0.2+zoom*sin(thRcamara),-0.2,(0.1-zoom*cos(thRcamara)),0.0,0.0,0.5,0,1,0);
+	gluLookAt(cos(thRcamara)/2,-0.2,sin(thRcamara)/2,0.0,0.0,0,0,0.5,0);
 }
 
 //Usamos las teclas direccionales para manejar el zoom de la camara
@@ -101,7 +102,7 @@ void iluminacionActDesact(bool act){
 
 // ****************** FUNCIONES DE TEXTURA ******************
 static GLuint nombresTexturas[7];
-char* archivosTexturas[7] = {"chess.bmp","madera.bmp", "planeta1.bmp", "planeta2.bmp", "planeta3.bmp", "planeta4.bmp", "planeta.bmp"};
+char* archivosTexturas[7] = {"chess.bmp","madera.bmp", "RedLeavesTexture.bmp", "IvyTexture.bmp", "WoodGrain.bmp", "planeta4.bmp", "planeta.bmp"};
 
 
 /*Esta Funcion void loadTextureFromFile(char *filename) de carga de imagenes fue obtenida de el
@@ -146,7 +147,7 @@ void texturaActDesact(bool act){
 
 // ****************** FUNCIONES DE DIBUJADO ******************
 
-void dibujar(){
+void dibujarTablero(){
 	
 	glPushMatrix();	//Frontal
 		setMaterial(material_especularAMARILLO, material_ambientalAMARILLO, material_difusaAMARILLO, material_brilloAMARILLO);
@@ -207,6 +208,71 @@ void dibujar(){
 	glPopMatrix();
 }
 
+void dibujarESfera(){
+	//Objeto para representar la esfera
+	GLUquadricObj * qEsfera = gluNewQuadric(); // crea un objeto cuadrático
+	gluQuadricDrawStyle(qEsfera, GLU_FILL); //estilo alámbrico
+	setMaterial(material_especularROJO, material_ambientalROJO, material_difusaROJO, material_brilloROJO);
+	glColor3f(1.0,0.0,0.0); //fondo con textura
+
+	glPushMatrix();
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, nombresTexturas[2]); //textura de placa metalica
+		gluQuadricTexture(qEsfera,GL_TRUE);
+		glTranslatef (-0.65, 0.2, 0.0);
+		gluSphere (qEsfera, 0.1, 15, 15);
+		glDisable(GL_TEXTURE_2D);
+
+	glPopMatrix();
+}
+
+void dibujarCilindro(){
+	//Objeto para representar la esfera
+	GLUquadricObj * qCilindro = gluNewQuadric(); // crea un objeto cuadrático
+	gluQuadricDrawStyle(qCilindro, GLU_FILL); //estilo alámbrico
+	setMaterial(material_especularVERDE, material_ambientalVERDE, material_difusaVERDE, material_brilloVERDE);
+	glColor3f(0.0,1.0,0.0); //fondo con textura
+
+	glPushMatrix();
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, nombresTexturas[3]); //textura de placa metalica
+		gluQuadricTexture(qCilindro,GL_TRUE);
+		glTranslatef (-0.65, 0.3, 0.3);
+		//gluSphere (qCilindro, 0.1, 15, 15);
+		glRotatef(90,0.5,0,0);
+		gluCylinder(qCilindro,0.1,0.1,0.2,15,15);
+		glDisable(GL_TEXTURE_2D);
+
+	glPopMatrix();
+}
+
+void dibujarDisco(){
+	//Objeto para representar la esfera
+	GLUquadricObj * qCilindro = gluNewQuadric(); // crea un objeto cuadrático
+	gluQuadricDrawStyle(qCilindro, GLU_FILL); //estilo alámbrico
+	setMaterial(material_especularOLIVA, material_ambientalOLIVA, material_difusaOLIVA, material_brilloOLIVA);
+	glColor3f(1.0,1.0,0.6); //fondo con textura
+
+	glPushMatrix();
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, nombresTexturas[4]); //textura de placa metalica
+		gluQuadricTexture(qCilindro,GL_TRUE);
+		glTranslatef (-0.65, 0.3, 0.6);
+		//gluSphere (qCilindro, 0.1, 15, 15);
+		//glRotatef(90,0.5,0,0);
+		//gluCylinder(qCilindro,0.1,0.1,0.2,15,15);
+		gluDisk(qCilindro,0.05,0.15,15,15);
+		glDisable(GL_TEXTURE_2D);
+
+	glPopMatrix();
+}
+
+void dibujarEscena(){
+	dibujarTablero();
+	dibujarESfera();
+	dibujarCilindro();
+	dibujarDisco();
+}
 
 void initgl(){
 	
@@ -257,7 +323,7 @@ void display(){
 	glPushMatrix();
 		glScalef(0.5,0.5,0.5);
 
-		dibujar();
+		dibujarEscena();
 	glPopMatrix();
 	
 	glFlush();//resetea los valores de las variables
