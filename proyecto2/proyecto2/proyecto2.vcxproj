@@ -75,6 +75,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="global.h" />
+    <ClInclude Include="luces.h" />
     <ClInclude Include="RgbImage.h" />
   </ItemGroup>
   <ItemGroup>

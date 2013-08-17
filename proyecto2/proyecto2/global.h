@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <windows.h>
+#include "luces.h"
 
 //OGL - GLUT LIB
 
